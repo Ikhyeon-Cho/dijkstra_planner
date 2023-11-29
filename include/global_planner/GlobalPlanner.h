@@ -55,7 +55,7 @@ public:
   roscpp::Parameter<double> grid_resolution{ "GlobalPlannerNode/OccupancyMap/grid_resolution", 0.1 };
   roscpp::Parameter<double> occupancy_free_threshold{ "GlobalPlannerNode/OccupancyMap/free_threshold", 0.3 };
   roscpp::Parameter<double> occupancy_occupied_threshold{ "GlobalPlannerNode/OccupancyMap/occupied_threshold", 0.7 };
-  roscpp::Parameter<int> inflation_length{ "GlobalPlannerNode/OccupancyMap/inflation_length", 1 };
+  roscpp::Parameter<double> inflation_radius{ "GlobalPlannerNode/OccupancyMap/inflation_radius", 0.3 };
   roscpp::Parameter<double> visualization_duration{ "GlobalPlannerNode/OccupancyMap/visualize_duration", 1.0 };
   roscpp::Timer visualization_timer_occupancy{ visualization_duration.param(), &GlobalPlanner::visualizeOccupancyMap, this };
 

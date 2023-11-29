@@ -36,7 +36,16 @@ void GlobalPlanner::readOccupancyMapFromImage()
   OccupancyGridMapHelper::applyBinaryThreshold(occupancy_free_threshold.param(), occupancy_occupied_threshold.param(),
                                                occupancy_map);
 
-  wavefront_planner_.setMap(occupancy_map);
+  if (inflation_radius.param() > std::numeric_limits<double>::epsilon())
+  {
+    OccupancyGridMap inflated_map;
+    OccupancyGridMapHelper::getInflatedMap(occupancy_map, inflation_radius.param(), inflated_map);
+    wavefront_planner_.setMap(inflated_map);
+  }
+  else
+  {
+    wavefront_planner_.setMap(occupancy_map);
+  }
 }
 
 void GlobalPlanner::visualizeOccupancyMap(const ros::TimerEvent& event)

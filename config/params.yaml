@@ -16,7 +16,7 @@ GlobalPlannerNode:
     grid_resolution: 0.1
     free_threshold: 0.3
     occupied_threshold: 0.50
-    inflation_length: 0.5
+    inflation_radius: 0.5
     visualize_duration: 1.5
 
   Planner:
