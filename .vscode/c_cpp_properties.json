@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/opt/ros/noetic/include/**",
+        "/home/isr/ros/dev_ws/src/elevation_map_loader/include/**",
+        "/home/isr/ros/dev_ws/src/isr_ros_utils/include/**",
+        "/home/isr/ros/dev_ws/src/occupancy_grid_map/include/**",
+        "/home/isr/ros/dev_ws/src/wavefront_planner/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

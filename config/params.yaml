@@ -1,0 +1,23 @@
+## Frame Ids
+frameId_robot: "base_link"
+frameId_map: "map"
+
+GlobalPlannerNode:
+  SubscribedTopic:
+    goal: "/move_base_simple/goal"
+    occupancy_map: "map" # if reading map from image, this name will be used for publisher
+
+  PublishingTopic:
+    path: "path"
+
+  OccupancyMap:
+    read_map_from_image: true
+    image_path: $(find wavefront_planner)/config/sample.png
+    grid_resolution: 0.1
+    free_threshold: 0.3
+    occupied_threshold: 0.50
+    inflation_length: 0.5
+    visualize_duration: 1.5
+
+  Planner:
+    search_unknown_option: false # Set false for faster planning

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>wavefront_planner</name>
+  <version>0.0.0</version>
+  <description>The wavefront_planner package</description>
+  <maintainer email="tre0430@korea.ac.kr">Ikhyeon Cho</maintainer>
+  <license>.</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>grid_map_core</depend>
+  <depend>grid_map_ros</depend>
+  <depend>grid_map_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf</depend>
+  <depend>tf2_ros</depend>
+  <depend>ddynamic_reconfigure</depend>
+  <depend>occupancy_grid_map</depend>
+  <depend>isr_ros_utils</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

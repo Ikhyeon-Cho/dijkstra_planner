@@ -1,0 +1,13 @@
+<launch>
+  <!-- Parameters -->
+  <rosparam file="$(find wavefront_planner)/config/params.yaml" command="load" subst_value="true" />
+
+  <!-- Map Lodaer -->
+  <node pkg="wavefront_planner" type="wavefront_planner_node" name="wavefront_planner" output="screen" />
+
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" name="rviz_occupancy_map_server" args="-d $(find wavefront_planner)/rviz/global_planner.rviz" />
+
+  <!-- RQT -->
+  <!-- <node pkg="rqt_gui" type="rqt_gui" name="rqt" args="perspective-file $(find wavefront_planner)/rviz/rviz.perspective" /> -->
+</launch>
