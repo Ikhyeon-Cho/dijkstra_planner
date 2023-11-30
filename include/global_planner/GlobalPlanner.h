@@ -12,7 +12,7 @@
 
 #include <ros/ros.h>
 
-#include <isr_ros_utils/core/utils.h>
+#include <isr_ros_utils/core/core.h>
 #include <isr_ros_utils/tools/TransformHandler.h>
 #include <isr_ros_utils/tools/MsgConverter.h>
 
