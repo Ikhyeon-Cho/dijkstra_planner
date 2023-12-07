@@ -4,8 +4,9 @@ add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  ros_node_utils
+  ros_transform_utils
   occupancy_grid_map
-  isr_ros_utils
 )
 
 catkin_package(
@@ -15,8 +16,9 @@ catkin_package(
     # wavefront_planner
   CATKIN_DEPENDS 
     roscpp
+    ros_node_utils
+    ros_transform_utils
     occupancy_grid_map
-    isr_ros_utils
 )
 
 ###########

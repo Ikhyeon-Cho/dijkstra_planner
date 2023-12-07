@@ -8,6 +8,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
+  <depend>ros_node_utils</depend>
+  <depend>ros_transform_utils</depend>
   <depend>grid_map_core</depend>
   <depend>grid_map_ros</depend>
   <depend>grid_map_msgs</depend>
@@ -16,7 +18,6 @@
   <depend>tf2_ros</depend>
   <depend>ddynamic_reconfigure</depend>
   <depend>occupancy_grid_map</depend>
-  <depend>isr_ros_utils</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
