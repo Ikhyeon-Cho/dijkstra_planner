@@ -1,23 +1,25 @@
-## Frame Ids
-frameId_robot: "base_link"
-frameId_map: "map"
-
-GlobalPlannerNode:
-  SubscribedTopic:
+wavefront_planner_node:
+  Subscribed_Topics:
     goal: "/move_base_simple/goal"
-    occupancy_map: "map" # if reading map from image, this name will be used for publisher
+    occupancy_map: "/map"
 
-  PublishingTopic:
-    path: "path"
+  Published_Topics:
+    global_path: "path"
+    inflated_map: "/map_inflated"
 
-  OccupancyMap:
-    read_map_from_image: true
+  Parameters:
+    ## Frame Ids
+    base_frameId: "base_link"
+    map_frameId: "map"
+
+    ## Occupancy Map
+    use_map_from_image: true
     image_path: $(find wavefront_planner)/config/sample.png
+    map_visualize_duration: 2.0
     grid_resolution: 0.1
-    free_threshold: 0.3
-    occupied_threshold: 0.50
+    occupancy_free_threshold: 0.3
+    occupancy_occupied_threshold: 0.70
     inflation_radius: 0.5
-    visualize_duration: 1.5
 
-  Planner:
+    ## Wavefront search
     search_unknown_option: false # Set false for faster planning

@@ -13,7 +13,7 @@ namespace ros
 {
 GlobalPlanner::GlobalPlanner()
 {
-  if (read_map_from_image.param())
+  if (use_map_from_image.param())
     readOccupancyMapFromImage();
 
   visualization_timer_occupancy.start();
@@ -63,7 +63,7 @@ void GlobalPlanner::goalCallback(const geometry_msgs::PoseStampedConstPtr& msg)
 
   // Set robot position
   geometry_msgs::TransformStamped robot_in_mapFrame;
-  transform_handler_.getTransform(frameId_map.param(), frameId_robot.param(), robot_in_mapFrame);
+  transform_handler_.getTransform(map_frameId.param(), base_frameId.param(), robot_in_mapFrame);
   Eigen::Vector2d robot_position(robot_in_mapFrame.transform.translation.x, robot_in_mapFrame.transform.translation.y);
 
   std::vector<Eigen::Vector2d> path;
