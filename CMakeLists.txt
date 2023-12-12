@@ -40,3 +40,11 @@ add_executable(wavefront_planner_node src/global_planner_node.cpp
 target_link_libraries(wavefront_planner_node
   ${catkin_LIBRARIES}
 )
+
+add_executable(waypoint_manager_node src/waypoint_manager_node.cpp
+  # src/waypoint_manager/WaypointManager.cpp
+  src/wavefront_planner/WavefrontPlannerRosConverter.cpp
+)
+target_link_libraries(waypoint_manager_node
+  ${catkin_LIBRARIES}
+)
