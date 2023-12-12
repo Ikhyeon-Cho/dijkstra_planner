@@ -10,7 +10,7 @@
 #ifndef WAVEFRONT_PLANNER_H
 #define WAVEFRONT_PLANNER_H
 
-#include <occupancy_grid_map/OccupancyGridMap.h>
+#include <occupancyMap/OccupancyGridMap.h>
 
 #include "wavefront_planner/Costmap.h"
 

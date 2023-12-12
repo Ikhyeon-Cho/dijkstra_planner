@@ -6,7 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   ros_node_utils
   ros_transform_utils
-  occupancy_grid_map
+  elevation_map_server
 )
 
 catkin_package(
@@ -18,7 +18,7 @@ catkin_package(
     roscpp
     ros_node_utils
     ros_transform_utils
-    occupancy_grid_map
+    elevation_map_server
 )
 
 ###########

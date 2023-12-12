@@ -15,8 +15,8 @@
 #include <ros_node_utils/Core.h>
 #include <ros_transform_utils/TransformHandler.h>
 
-#include <occupancy_grid_map/OccupancyGridMapHelper.h>
-#include <occupancy_grid_map/OccupancyGridMapRosConverter.h>
+#include <occupancyMap/OccupancyGridMapHelper.h>
+#include <occupancyMap/OccupancyGridMapRosConverter.h>
 
 #include "wavefront_planner/WavefrontPlanner.h"
 #include "wavefront_planner/WavefrontPlannerRosConverter.h"

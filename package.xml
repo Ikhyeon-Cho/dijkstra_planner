@@ -13,11 +13,8 @@
   <depend>grid_map_core</depend>
   <depend>grid_map_ros</depend>
   <depend>grid_map_msgs</depend>
+  <depend>elevation_map_server</depend>
   <depend>nav_msgs</depend>
-  <depend>tf</depend>
-  <depend>tf2_ros</depend>
-  <depend>ddynamic_reconfigure</depend>
-  <depend>occupancy_grid_map</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
