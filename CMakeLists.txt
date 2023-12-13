@@ -41,10 +41,10 @@ target_link_libraries(wavefront_planner_node
   ${catkin_LIBRARIES}
 )
 
-add_executable(waypoint_manager_node src/waypoint_manager_node.cpp
-  # src/waypoint_manager/WaypointManager.cpp
+add_executable(localgoal_generator_node src/localgoal_generator_node.cpp
+  src/local_goal_generator/LocalGoalGenerator.cpp
   src/wavefront_planner/WavefrontPlannerRosConverter.cpp
 )
-target_link_libraries(waypoint_manager_node
+target_link_libraries(localgoal_generator_node
   ${catkin_LIBRARIES}
 )

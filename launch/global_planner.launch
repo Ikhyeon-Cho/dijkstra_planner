@@ -9,4 +9,7 @@
   <node pkg="$(arg package)" type="$(arg package)_node" name="$(arg package)_node"
     output="screen" />
 
+  <!-- Launch local goal generator -->
+  <node pkg="$(arg package)" type="localgoal_generator_node" name="localgoal_generator_node"
+    output="screen" />
 </launch>

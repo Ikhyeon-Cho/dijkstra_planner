@@ -26,3 +26,18 @@ wavefront_planner_node:
 
     ## Wavefront search
     search_unknown_option: false # Set false to regard unknown cells as occupied
+
+localgoal_generator_node:
+  Subscribed_Topics:
+    global_path: "/wavefront_planner_node/path"
+
+  Published_Topics:
+    local_goal: "goal"
+
+  Parameters:
+    ## Frame Ids
+    base_frameId: "base_link"
+    map_frameId: "map"
+
+    ## Local Goal
+    distance_to_localGoal: 1.0

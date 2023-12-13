@@ -1,5 +1,5 @@
 /*
- * waypoint_manager_node.cpp
+ * local_goal_generator_node.cpp
  *
  *  Created on: Dec 12, 2023
  *      Author: Ikhyeon Cho
@@ -8,16 +8,16 @@
  */
 
 #include <ros/ros.h>
-#include "waypoint_manager/WaypointManager.h"
+#include "local_goal_generator/LocalGoalGenerator.h"
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "waypoint_manager_node");
+  ros::init(argc, argv, "localgoal_generator_node");
   ros::NodeHandle nh("~");
 
-  ros::WaypointManager node;
+  ros::LocalGoalGenerator node;
 
-  ros::Rate loop_rate(50);
+  ros::Rate loop_rate(100);
   while (ros::ok())
   {
     ros::spinOnce();
