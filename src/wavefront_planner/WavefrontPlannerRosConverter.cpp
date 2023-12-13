@@ -22,6 +22,10 @@ void WavefrontPlannerRosConverter::toPathMsg(const std::vector<Eigen::Vector2d>&
     pose.pose.position.x = position.x();
     pose.pose.position.y = position.y();
     pose.pose.position.z = 0;
+    pose.pose.orientation.x = 0;
+    pose.pose.orientation.y = 0;
+    pose.pose.orientation.z = 0;
+    pose.pose.orientation.w = 1;
 
     msg.poses.push_back(pose);
   }
