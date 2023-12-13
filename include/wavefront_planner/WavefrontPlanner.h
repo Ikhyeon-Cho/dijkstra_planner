@@ -31,6 +31,10 @@ public:
   /// @return
   const OccupancyGridMap& getMap() const;
 
+  /// @brief
+  /// @return
+  const Costmap::Ptr& getCostMap() const;
+
   /// @brief The algorithm spreads a "wave" of values starting from the goal cell and expanding outwards, assigning each
   /// cell a value indicating its distance from the goal.
   /// @param start_position The position of a robot in 2D
@@ -39,17 +43,32 @@ public:
   /// @param search_unknown_area
   /// @return True if
   bool findWavefrontPath(const Eigen::Vector2d& start_position, const Eigen::Vector2d& goal_position,
-                         std::vector<Eigen::Vector2d>& path, bool search_unknown_area);
+                         std::vector<Eigen::Vector2d>& path);
+
+  /// @brief
+  /// @param start_position
+  /// @param goal_position
+  /// @param search_unknown_area
+  /// @return
+  bool doWavefrontPropagationAt(const Eigen::Vector2d& start_position, const Eigen::Vector2d& goal_position);
+
+  bool doPathTracing(const Eigen::Vector2d& start_position, const Eigen::Vector2d& goal_position,
+                     std::vector<Eigen::Vector2d>& path);
 
 private:
   std::tuple<bool, std::vector<Eigen::Vector2d>> wavefrontAlgorithm(const grid_map::Index& start_index,
-                                                                    const grid_map::Index& goal_index,
-                                                                    bool search_unknown_area);
+                                                                    const grid_map::Index& goal_index);
+
+  bool doWavefrontPropagation(const grid_map::Index& start_index, const grid_map::Index& goal_index);
+
+  void doPathTracing(const grid_map::Index& start_index, const grid_map::Index& goal_index,
+                     std::vector<Eigen::Vector2d>& path);
 
   OccupancyGridMap occupancymap_;
 
   Costmap::Ptr costmapPtr_;  // used for search algorithm
   bool has_map_{ false };
+  bool search_unknown_area_{ false };
 };
 
 #endif

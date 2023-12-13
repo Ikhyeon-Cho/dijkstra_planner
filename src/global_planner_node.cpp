@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 
   ros::GlobalPlanner planner;
 
-  ros::Rate loop_rate(1);
+  ros::Rate loop_rate(100);
   while (ros::ok())
   {
     ros::spinOnce();

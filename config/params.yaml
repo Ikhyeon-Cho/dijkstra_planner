@@ -15,11 +15,14 @@ wavefront_planner_node:
     ## Occupancy Map
     use_map_from_image: true
     image_path: $(find wavefront_planner)/config/sample.png
-    map_visualize_duration: 2.0
     grid_resolution: 0.1
     occupancy_free_threshold: 0.3
     occupancy_occupied_threshold: 0.70
     inflation_radius: 0.5
+
+    ## Cycle Time
+    path_update_duration: 0.05 # 20Hz
+    map_visualize_duration: 2.0
 
     ## Wavefront search
     search_unknown_option: false # Set false for faster planning

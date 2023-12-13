@@ -16,7 +16,7 @@ class Costmap : public grid_map::GridMap
 {
 public:
   using Ptr = std::shared_ptr<Costmap>;
-  
+
   Costmap() : grid_map::GridMap({ "cost", "position_x_log", "position_y_log" })
   {
   }
@@ -49,6 +49,11 @@ public:
   bool isEmptyAt(const grid_map::Index& index)
   {
     return !std::isfinite(at("cost", index));
+  }
+
+  bool isConnectedwithGoalAt(const grid_map::Index& index)
+  {
+    return std::isfinite(at("position_x_log", index));
   }
 
   // Grid Index with Cost

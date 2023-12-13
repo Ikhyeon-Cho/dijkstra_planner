@@ -30,11 +30,14 @@ public:
 
   void readOccupancyMapFromImage();
 
+  void findPath(const geometry_msgs::PoseStampedConstPtr& msg);
+
+  bool findPathAt(const geometry_msgs::TransformStamped& robot_pose, const geometry_msgs::PoseStamped& goal_pose,
+                  nav_msgs::Path& path);
+
   void visualizeOccupancyMap(const ros::TimerEvent& event);
 
-  void updateTransform(const ros::TimerEvent& event);
-
-  void goalCallback(const geometry_msgs::PoseStampedConstPtr& msg);
+  void updatePath(const ros::TimerEvent& event);
 
 public:
   // Subscribed Topics
@@ -56,6 +59,8 @@ public:
   roscpp::Parameter<double> occupancy_free_threshold{ "~/Parameters/occupancy_free_threshold", 0.3 };
   roscpp::Parameter<double> occupancy_occupied_threshold{ "~/Parameters/occupancy_occupied_threshold", 0.7 };
   roscpp::Parameter<double> inflation_radius{ "~/Parameters/inflation_radius", 0.3 };
+  // -- Cycle Time
+  roscpp::Parameter<double> path_update_duration{ "~/Parameters/path_update_duration", 0.05 };
   roscpp::Parameter<double> map_visualization_duration{ "~/Parameters/map_visualize_duration", 1.0 };
   // -- Wavefront Search
   roscpp::Parameter<bool> search_unknown_option{ "~/Parameters/search_unknown_option", false };
@@ -63,14 +68,17 @@ public:
 private:
   WavefrontPlanner wavefront_planner_;
   TransformHandler transform_handler_;
+  geometry_msgs::PoseStamped goalPose_in_mapFrame_;
 
-  roscpp::Subscriber<geometry_msgs::PoseStamped> goal_subscriber{ goal_topic.param(), &GlobalPlanner::goalCallback,
-                                                                  this };
+  roscpp::Subscriber<geometry_msgs::PoseStamped> goal_subscriber{ goal_topic.param(), &GlobalPlanner::findPath, this };
   roscpp::Publisher<nav_msgs::Path> global_path_publisher{ global_path_topic };
   roscpp::Publisher<nav_msgs::OccupancyGrid> occupancy_map_publisher{ inflated_map_topic.param() };
 
-  roscpp::Timer visualization_timer_occupancy{ map_visualization_duration.param(),
-                                               &GlobalPlanner::visualizeOccupancyMap, this };
+  roscpp::Timer path_update_timer{ path_update_duration.param(), &GlobalPlanner::updatePath, this };
+  roscpp::Timer map_visualization_timer{ map_visualization_duration.param(), &GlobalPlanner::visualizeOccupancyMap,
+                                         this };
+
+  roscpp::Publisher<grid_map_msgs::GridMap> costmap_publisher{ "test" };
 };
 }  // namespace ros
 
