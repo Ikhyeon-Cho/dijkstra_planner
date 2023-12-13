@@ -63,7 +63,7 @@ public:
   roscpp::Parameter<double> path_update_duration{ "~/Parameters/path_update_duration", 0.05 };
   roscpp::Parameter<double> map_visualization_duration{ "~/Parameters/map_visualize_duration", 1.0 };
   // -- Wavefront Search
-  roscpp::Parameter<bool> search_unknown_option{ "~/Parameters/search_unknown_option", false };
+  roscpp::Parameter<bool> search_unknown{ "~/Parameters/search_unknown_option", false };
 
 private:
   WavefrontPlanner wavefront_planner_;

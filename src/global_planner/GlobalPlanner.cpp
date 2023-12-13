@@ -16,6 +16,8 @@ GlobalPlanner::GlobalPlanner()
   if (use_map_from_image.param())
     readOccupancyMapFromImage();
 
+  wavefront_planner_.setSearchUnknownAreaOption(search_unknown.param());
+
   map_visualization_timer.start();
 }
 

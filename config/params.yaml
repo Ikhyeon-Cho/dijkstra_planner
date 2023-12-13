@@ -25,4 +25,4 @@ wavefront_planner_node:
     map_visualize_duration: 2.0
 
     ## Wavefront search
-    search_unknown_option: false # Set false for faster planning
+    search_unknown_option: false # Set false to regard unknown cells as occupied

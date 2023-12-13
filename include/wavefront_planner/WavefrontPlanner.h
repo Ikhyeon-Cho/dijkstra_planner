@@ -27,6 +27,10 @@ public:
   /// @param map
   void setMap(const OccupancyGridMap& map);
 
+  /// @brief 
+  /// @param search_unknown_area 
+  void setSearchUnknownAreaOption(bool search_unknown_area);
+
   /// @brief
   /// @return
   const OccupancyGridMap& getMap() const;
@@ -39,30 +43,20 @@ public:
   /// cell a value indicating its distance from the goal.
   /// @param start_position The position of a robot in 2D
   /// @param goal_position The position of a goal in 2D
-  /// @param path The shortest path from a start position to a goal position
-  /// @param search_unknown_area
-  /// @return True if
-  bool findWavefrontPath(const Eigen::Vector2d& start_position, const Eigen::Vector2d& goal_position,
-                         std::vector<Eigen::Vector2d>& path);
-
-  /// @brief
-  /// @param start_position
-  /// @param goal_position
-  /// @param search_unknown_area
-  /// @return
+  /// @return True if the wave is reached to the start position, False otherwise
   bool doWavefrontPropagationAt(const Eigen::Vector2d& start_position, const Eigen::Vector2d& goal_position);
 
   bool doPathTracing(const Eigen::Vector2d& start_position, const Eigen::Vector2d& goal_position,
                      std::vector<Eigen::Vector2d>& path);
 
 private:
-  std::tuple<bool, std::vector<Eigen::Vector2d>> wavefrontAlgorithm(const grid_map::Index& start_index,
-                                                                    const grid_map::Index& goal_index);
+  // Dijkstra search: It is nothing but a priority queue based algorithm implementation
+  // See https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
+  bool wavefrontPropagation(const grid_map::Index& start_index, const grid_map::Index& goal_index);
 
-  bool doWavefrontPropagation(const grid_map::Index& start_index, const grid_map::Index& goal_index);
-
-  void doPathTracing(const grid_map::Index& start_index, const grid_map::Index& goal_index,
-                     std::vector<Eigen::Vector2d>& path);
+  // Backtracking of search algorithm: After (goal -> robot) search, load saved sequence of (robot -> goal) path
+  void pathTracing(const grid_map::Index& start_index, const grid_map::Index& goal_index,
+                   std::vector<Eigen::Vector2d>& path);
 
   OccupancyGridMap occupancymap_;
 
