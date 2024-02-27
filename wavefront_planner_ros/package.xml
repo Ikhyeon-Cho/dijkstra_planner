@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>wavefront_planner</name>
+  <version>0.0.0</version>
+  <description>The wavefront_planner package</description>
+  <maintainer email="tre0430@korea.ac.kr">Ikhyeon Cho</maintainer>
+  <license>.</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>occupancy_gridmap_core</depend>
+  <depend>occupancy_gridmap_msgs</depend>
+  <depend>wavefront_planner_core</depend>
+  <depend>wavefront_planner_msgs</depend>
+
+  <export>
+  </export>
+</package>

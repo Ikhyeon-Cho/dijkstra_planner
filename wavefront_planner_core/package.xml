@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>wavefront_planner_core</name>
+  <version>0.0.0</version>
+  <description>The wavefront_planner package</description>
+  <maintainer email="tre0430@korea.ac.kr">Ikhyeon Cho</maintainer>
+  <license>.</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>grid_map_core</depend>
+  <depend>occupancy_gridmap_core</depend>
+
+  <export>
+  </export>
+</package>
