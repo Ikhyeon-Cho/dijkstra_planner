@@ -3,7 +3,7 @@
   <arg name="package_dir" value="$(find wavefront_planner)" />
 
   <!-- Read parameters -->
-  <rosparam file="$(arg package_dir)/config/params.yaml" command="load" subst_value="true" />
+  <rosparam file="$(arg package_dir)/launch/config/params.yaml" command="load" subst_value="true" />
 
   <!-- Launch wavefront planner -->
   <node pkg="$(arg package)" type="$(arg package)_node" name="$(arg package)_node"

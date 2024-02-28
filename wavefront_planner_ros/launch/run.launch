@@ -3,10 +3,11 @@
   <arg name="package_dir" value="$(find wavefront_planner)" />
 
   <!-- Launch -->
-  <include file="$(arg package_dir)/launch/global_planner.launch" />
+  <include file="$(arg package_dir)/launch/$(arg package).launch" />
+
   <!-- Rviz -->
-  <node pkg="rviz" type="rviz" name="rviz_occupancy_map_server"
-    args="-d $(find wavefront_planner)/rviz/global_planner.rviz" />
+  <node pkg="rviz" type="rviz" name="$(arg package)_rviz"
+    args="-d $(find wavefront_planner)/launch/rviz/$(arg package).rviz" />
 
 
 </launch>
