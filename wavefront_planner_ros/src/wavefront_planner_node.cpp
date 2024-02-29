@@ -13,8 +13,6 @@
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "wavefront_planner");
-  ros::NodeHandle nh("~");
-
   WavefrontPlanner wavefront_planner_node;
 
   ros::Rate loop_rate(100);

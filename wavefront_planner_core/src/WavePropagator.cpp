@@ -15,151 +15,202 @@ WavePropagator::WavePropagator()
 {
 }
 
-void WavePropagator::setGridSearchSpace(const OccupancyGridMap& map)
+void WavePropagator::initialize(const CostMap& costmap)
 {
-  occupancymap_.setGeometry(grid_map::Length(map.getLength()), map.getResolution());
-  occupancymap_.getOccupancyLayer() = grid_map::GridMap::Matrix(map.getOccupancyLayer());
-
-  costmapPtr_ = std::make_shared<Costmap>(map);
+  costmap_ = costmap;
+  costmap_.add("cost_wave_expansion");
+  costmap_.add("position_x_log");
+  costmap_.add("position_y_log");
 }
 
-void WavePropagator::searchUnknownArea(bool search_unknown_area)
+const CostMap& WavePropagator::getCostMap() const
 {
-  search_unknown_area_ = search_unknown_area;
+  return costmap_;
 }
 
-const Costmap::Ptr& WavePropagator::getCostMap() const
-{
-  return costmapPtr_;
-}
-
-bool WavePropagator::doWavePropagationAt(const Position2D& goal_position, const Position2D& robot_position)
+bool WavePropagator::doWavePropagationAt(const grid_map::Position& goal_position,
+                                         const grid_map::Position& robot_position)
 {
   // Check Validity of start and goal position: should be inside the map
-  if (occupancymap_.isOutOfBoundaryAt(goal_position) || occupancymap_.isOutOfBoundaryAt(robot_position))
+  if (!costmap_.isDefinedAt(goal_position))
+  {
+    std::cout << "\033[33m"
+              << "[ WARN] [ WavePropagator]: Invalid Position. Goal is out of the map" << std::endl;
     return false;
+  }
 
-  auto goal_index = occupancymap_.getIndexFrom(goal_position);
-  auto robot_index = occupancymap_.getIndexFrom(robot_position);
-
-  // Check Validity of start and goal position: should not be in occupied cell
-  if (occupancymap_.isOccupiedAt(robot_index) || occupancymap_.isOccupiedAt(goal_index))
+  if (!costmap_.isDefinedAt(robot_position))
+  {
+    std::cout << "\033[33m"
+              << "[ WARN] [ WavePropagator]: Invalid Position. Robot is out of the map" << std::endl;
     return false;
+  }
 
-  return wavefrontPropagation(robot_index, goal_index);
+  auto goal_index = costmap_.getGridIndexFrom(goal_position);
+  auto robot_index = costmap_.getGridIndexFrom(robot_position);
+
+  // Check Validity of start and goal position: should not be in occupied cell (or also unknown cell)
+  if (costmap_.isLethalAt(robot_index))
+  {
+    std::cout << "\033[33m"
+              << "[ WARN] [ WavePropagator]: Invalid position. Robot is not in the FreeSpace" << std::endl;
+    return false;
+  }
+
+  if (costmap_.isLethalAt(goal_index))
+  {
+    std::cout << "\033[31m"
+              << "[ERROR] [ WavePropagator]: Invalid position. Goal is not in the FreeSpace" << std::endl;
+    return false;
+  }
+
+  return wavePropagation(goal_index, robot_index);
 }
 
-bool WavePropagator::wavefrontPropagation(const grid_map::Index& start_index, const grid_map::Index& goal_index)
+bool WavePropagator::wavePropagation(const grid_map::Index& goal_index, const grid_map::Index& robot_index)
 {
-  costmapPtr_->clearAll();                                           // faster than add layer
-  auto& cost_layer = costmapPtr_->getCostLayer();                    // search cost will be logged here
-  auto& position_x_log_layer = costmapPtr_->getLogPositionXLayer();  // searched history (x) will be logged here
-  auto& position_y_log_layer = costmapPtr_->getLogPositionYLayer();  // searched history (y) will be logged here
+  // clear() is faster than add(layer)
+  costmap_.clear("cost_wave_expansion");
+  costmap_.clear("position_x_log");
+  costmap_.clear("position_y_log");
+  auto& wave_expansion_cost_layer = costmap_["cost_wave_expansion"];  // search cost will be logged here
+  auto& position_x_log_layer = costmap_["position_x_log"];            // searched history (x) will be logged here
+  auto& position_y_log_layer = costmap_["position_y_log"];            // searched history (y) will be logged here
 
-  std::priority_queue<Costmap::CostComparator> search_list;
-  float zero_cost{ 0.0f };
-  search_list.push(Costmap::CostComparator(goal_index, zero_cost));  // "wave" from the goal cell
+  std::priority_queue<CostMap::Cell> searched_cell_list;
+  CostMap::Cell goal_cell(goal_index, 0.0f);  // starts with zero cost
+  searched_cell_list.push(goal_cell);         // "wave" from the goal cell
 
-  while (!search_list.empty())
+  while (!searched_cell_list.empty())
   {
-    // Termination condition of while loop: If wave reached start cell, then quit search
-    // add 2 margin to handle localization error
-    if (costmapPtr_->isConnectedwithGoalAt(start_index) &&
-        costmapPtr_->isConnectedwithGoalAt(start_index + grid_map::Index(2, 0)) &&
-        costmapPtr_->isConnectedwithGoalAt(start_index + grid_map::Index(0, 2)) &&
-        costmapPtr_->isConnectedwithGoalAt(start_index + grid_map::Index(-2, 0)) &&
-        costmapPtr_->isConnectedwithGoalAt(start_index + grid_map::Index(0, -2)))
+    // Termination condition of wavefromt propagation: If wave reached start cell, then quit search
+    // add 2 grid margin condition to handle the robot's localization error
+    if (hasWaveExpansionCostAt(robot_index + grid_map::Index(0, 0)) &&
+        hasWaveExpansionCostAt(robot_index + grid_map::Index(2, 0)) &&
+        hasWaveExpansionCostAt(robot_index + grid_map::Index(0, 2)) &&
+        hasWaveExpansionCostAt(robot_index + grid_map::Index(-2, 0)) &&
+        hasWaveExpansionCostAt(robot_index + grid_map::Index(0, -2)))
       return true;
 
-    const auto queried_cell = search_list.top();
-    const grid_map::Index& queried_index = queried_cell.index;
-    const float& queried_index_cost = queried_cell.cost;
-    search_list.pop();
+    const auto searched_cell = searched_cell_list.top();
+    const grid_map::Index& searched_cell_index = searched_cell.index;
+    const float& searched_cell_cost = searched_cell.cost;
+    searched_cell_list.pop();
 
-    const auto queried_position = occupancymap_.getPositionFrom(queried_index);
+    const auto searched_cell_position = costmap_.getPositionFrom(searched_cell_index);
 
-    auto search_iterator = occupancymap_.getSquareIterator(queried_index, 1);  // search nearest grid cells
-    for (search_iterator; !search_iterator.isPastEnd(); ++search_iterator)
+    auto wave_expansion_iterator = costmap_.getSquareIterator(searched_cell_index, 1);  // search nearest grid cells
+    for (wave_expansion_iterator; !wave_expansion_iterator.isPastEnd(); ++wave_expansion_iterator)
     {
-      if (occupancymap_.isOutOfBoundaryAt(*search_iterator))
+      if (!costmap_.isDefinedAt(*wave_expansion_iterator))
         continue;
 
-      if (occupancymap_.isOccupiedAt(*search_iterator))
+      if (costmap_.isLethalAt(*wave_expansion_iterator))
         continue;
 
-      if (!search_unknown_area_ && occupancymap_.isUnknownAt(*search_iterator))
-        continue;
-
-      // Square iterator searches center, but it is not needed (already searched)
-      if ((*search_iterator == queried_index).all())
+      // Square iterator searches the already searched grid cell, but it is not needed to search again
+      if ((*wave_expansion_iterator == searched_cell_index).all())
         continue;
 
       // alias
-      const auto& search_index = *search_iterator;
-      auto& wavefront_cost = cost_layer(search_index(0), search_index(1));
+      const auto& wavefront_index = *wave_expansion_iterator;
+      auto& wavefront_cost = wave_expansion_cost_layer(wavefront_index(0), wavefront_index(1));
 
-      auto& position_x_log = position_x_log_layer(search_index(0), search_index(1));
-      auto& position_y_log = position_y_log_layer(search_index(0), search_index(1));
+      auto& position_x_log = position_x_log_layer(wavefront_index(0), wavefront_index(1));
+      auto& position_y_log = position_y_log_layer(wavefront_index(0), wavefront_index(1));
 
-      const auto edge_cost = occupancymap_.getDistance(queried_index, search_index);  // weighted graph
+      const auto wave_expansion_cost =
+          costmap_.getL2Dist(searched_cell_index, wavefront_index);  // Euclidean distance: Weighted Graph
 
       if (!std::isfinite(wavefront_cost))  // never visited before
       {
-        wavefront_cost = queried_index_cost + edge_cost;
-        search_list.push(Costmap::CostComparator(search_index, wavefront_cost));  // add to next search list (with cost)
+        wavefront_cost = searched_cell_cost + wave_expansion_cost;
+        searched_cell_list.push(CostMap::Cell(wavefront_index, wavefront_cost));  // add to next search list (with cost)
 
-        position_x_log = queried_position(0);  // save history to the table
-        position_y_log = queried_position(1);
+        position_x_log = searched_cell_position(0);  // save history to the table
+        position_y_log = searched_cell_position(1);
       }
-      else if (wavefront_cost > queried_index_cost + edge_cost)  // override when lower cost arises
+      else if (wavefront_cost > searched_cell_cost + wave_expansion_cost)  // override the cost when lower cost arises
       {
-        wavefront_cost = queried_index_cost + edge_cost;
+        wavefront_cost = searched_cell_cost + wave_expansion_cost;
 
-        position_x_log = queried_position(0);
-        position_y_log = queried_position(1);
+        position_x_log = searched_cell_position(0);
+        position_y_log = searched_cell_position(1);
       }
     }
   }
 
-  // Could not escape while loop >> Cannot reach the start index: No feasible path
+  // Could not escape while loop >> Cannot reach the start index >> No feasible path
   return false;
 }
 
-bool WavePropagator::doPathGeneration(const Eigen::Vector2d& robot_position, const Eigen::Vector2d& goal_position,
-                                   std::vector<Eigen::Vector2d>& path)
+std::pair<bool, std::vector<grid_map::Position>>
+WavePropagator::doPathGeneration(const grid_map::Position& robot_position, const grid_map::Position& goal_position)
 {
   // Check Validity of robot and goal position: should be inside the map
-  if (occupancymap_.isOutOfBoundaryAt(robot_position) || occupancymap_.isOutOfBoundaryAt(goal_position))
-    return false;
+  if (!costmap_.isDefinedAt(robot_position))
+  {
+    std::cout << "\033[33m"
+              << "[ WARN] [ WavePropagator]: Robot is now out of the Map boundary" << std::endl;
+    return { false, {} };
+  }
+  if (!costmap_.isDefinedAt(goal_position))
+  {
+    std::cout << "\033[33m"
+              << "[ WARN] [ WavePropagator]: Goal is now out of the Map boundary" << std::endl;
+    return { false, {} };
+  }
 
-  auto start_index = occupancymap_.getIndexFrom(robot_position);
-  auto goal_index = occupancymap_.getIndexFrom(goal_position);
+  // Get grid index from position
+  auto robot_index = costmap_.getGridIndexFrom(robot_position);
+  auto goal_index = costmap_.getGridIndexFrom(goal_position);
 
-  // Check Validity of start and goal position: should not be in occupied cell
-  if (occupancymap_.isOccupiedAt(start_index) || occupancymap_.isOccupiedAt(goal_index))
-    return false;
+  // Check Validity of start and goal index: Should not be in occupied cell
+  if (costmap_.isLethalAt(robot_index))
+  {
+    std::cout << "\033[31m"
+              << "[ERROR] [ WavePropagator]: Robot is not in the Free Cell" << std::endl;
+    return { false, {} };
+  }
+  if (costmap_.isLethalAt(goal_index))
+  {
+    std::cout << "\033[33m"
+              << "[ WARN] [ WavePropagator]: Goal is not in the Free Cell" << std::endl;
+    return { false, {} };
+  }
 
-  if (!costmapPtr_->isConnectedwithGoalAt(start_index))
-    return false;
+  // Check whether the robot is out of the searched area
+  if (!hasWaveExpansionCostAt(robot_index))
+  {
+    std::cout << "\033[33m"
+              << "[ WARN] [ WavePropagator]: Robot is now out of the Searched area" << std::endl;
+    return { false, {} };
+  }
 
-  pathTracing(start_index, goal_index, path);
-  return true;
+  std::vector<grid_map::Position> path;
+  generatePath(robot_index, goal_index, path);
+  return { true, path };
 }
 
-void WavePropagator::pathTracing(const grid_map::Index& start_index, const grid_map::Index& goal_index,
-                                 std::vector<Eigen::Vector2d>& path)
+void WavePropagator::generatePath(const grid_map::Index& robot_index, const grid_map::Index& goal_index,
+                                  std::vector<grid_map::Position>& path)
 {
-  grid_map::Index index_backtracking(start_index);
+  grid_map::Index cost_gradient_follower(robot_index);
 
-  while (!(index_backtracking == goal_index).all())  // save (robot -> goal)
+  while (!(cost_gradient_follower == goal_index).all())  // Find path to (robot -> goal)
   {
-    Position2D next_position(costmapPtr_->getLogPositionXLayer()(index_backtracking.x(), index_backtracking.y()),
-                             costmapPtr_->getLogPositionYLayer()(index_backtracking.x(), index_backtracking.y()));
+    grid_map::Position next_position(costmap_["position_x_log"](cost_gradient_follower(0), cost_gradient_follower(1)),
+                                     costmap_["position_y_log"](cost_gradient_follower(0), cost_gradient_follower(1)));
 
     path.push_back(next_position);
 
-    index_backtracking = occupancymap_.getIndexFrom(next_position);
+    cost_gradient_follower = costmap_.getGridIndexFrom(next_position);
   }
-  path.push_back(occupancymap_.getPositionFrom(goal_index));
+  path.push_back(costmap_.getPositionFrom(goal_index));
+}
+
+bool WavePropagator::hasWaveExpansionCostAt(const grid_map::Index& index)
+{
+  return std::isfinite(costmap_.at("cost_wave_expansion", index));
 }
 // Backtracking of search algorithm: After (goal -> robot) search, load saved sequence of (robot -> goal)

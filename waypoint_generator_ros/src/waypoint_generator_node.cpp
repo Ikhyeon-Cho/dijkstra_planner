@@ -1,5 +1,5 @@
 /*
- * local_goal_generator_node.cpp
+ * waypoint_generator_node.cpp
  *
  *  Created on: Dec 12, 2023
  *      Author: Ikhyeon Cho
@@ -8,14 +8,12 @@
  */
 
 #include <ros/ros.h>
-#include "local_goal_generator/LocalGoalGenerator.h"
+#include "waypoint_generator_ros/WaypointGenerator.h"
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "localgoal_generator_node");
-  ros::NodeHandle nh("~");
-
-  ros::LocalGoalGenerator node;
+  ros::init(argc, argv, "waypoint_generator");
+  WaypointGenerator waypoint_generator_node;
 
   ros::Rate loop_rate(100);
   while (ros::ok())

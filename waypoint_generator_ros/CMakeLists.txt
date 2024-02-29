@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(occupancy_gridmap_server)
-add_compile_options(-std=c++14)
+project(waypoint_generator)
+add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  occupancy_gridmap_core
-  occupancy_gridmap_msgs
+  tf2_ros
+  wavefront_planner_msgs
 )
 
 catkin_package(
@@ -15,8 +15,8 @@ catkin_package(
     # wavefront_planner
   CATKIN_DEPENDS 
     roscpp
-    occupancy_gridmap_core
-    occupancy_gridmap_msgs
+    tf2_ros
+    wavefront_planner_msgs
 )
 
 ###########
@@ -29,11 +29,10 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(occupancy_gridmap_server
-  src/gridmap_server_node.cpp
-  src/GridMapServer.cpp
+add_executable(waypoint_generator_node src/waypoint_generator_node.cpp
+  src/WaypointGenerator.cpp
 )
 
-target_link_libraries(occupancy_gridmap_server
+target_link_libraries(waypoint_generator_node
   ${catkin_LIBRARIES}
 )

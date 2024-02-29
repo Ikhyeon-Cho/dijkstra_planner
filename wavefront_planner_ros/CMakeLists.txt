@@ -4,8 +4,9 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  wavefront_planner_core
   occupancy_gridmap_msgs
+  gridmap_server
+  wavefront_planner_core
   wavefront_planner_msgs
 )
 
@@ -16,8 +17,9 @@ catkin_package(
     # wavefront_planner
   CATKIN_DEPENDS 
     roscpp
-    wavefront_planner_core
     occupancy_gridmap_msgs
+    gridmap_server
+    wavefront_planner_core
     wavefront_planner_msgs
 )
 

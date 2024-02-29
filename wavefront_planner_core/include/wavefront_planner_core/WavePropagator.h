@@ -11,7 +11,7 @@
 #define WAVE_PROPAGATOR_H
 
 #include <occupancy_gridmap_core/OccupancyGridMap.h>
-#include "wavefront_planner_core/Costmap.h"
+#include <costmap_core/CostMap.h>
 
 class WavePropagator
 {
@@ -24,43 +24,34 @@ public:
 
   /// @brief
   /// @param map
-  void setGridSearchSpace(const OccupancyGridMap& map);
-
-  /// @brief
-  /// @param search_unknown_area
-  void searchUnknownArea(bool search_unknown_area = false);
+  void initialize(const CostMap& costmap);
 
   /// @brief
   /// @return
-  const OccupancyGridMap& getMap() const;
-
-  /// @brief
-  /// @return
-  const Costmap::Ptr& getCostMap() const;
+  const CostMap& getCostMap() const;
 
   /// @brief The algorithm spreads a "wave" of values starting from the goal cell and expanding outwards, assigning each
   /// cell a value indicating its distance from the goal.
   /// @param start_position The position of a robot in 2D
   /// @param goal_position The position of a goal in 2D
   /// @return True if the wave is reached to the start position, False otherwise
-  bool doWavePropagationAt(const Eigen::Vector2d& goal_position, const Eigen::Vector2d& robot_position);
+  bool doWavePropagationAt(const grid_map::Position& goal_position, const grid_map::Position& robot_position);
 
-  bool doPathGeneration(const Eigen::Vector2d& robot_position, const Eigen::Vector2d& goal_position,
-                     std::vector<Eigen::Vector2d>& path);
+  std::pair<bool, std::vector<grid_map::Position>> doPathGeneration(const grid_map::Position& robot_position,
+                                                                    const grid_map::Position& goal_position);
 
 private:
-  // Dijkstra search: It is nothing but a priority queue based algorithm implementation
+  // BFS search: It is nothing but a priority queue based algorithm implementation
   // See https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
-  bool wavefrontPropagation(const grid_map::Index& robot_index, const grid_map::Index& goal_index);
+  bool wavePropagation(const grid_map::Index& robot_index, const grid_map::Index& goal_index);
 
-  // Backtracking of search algorithm: After (goal -> robot) search, load saved sequence of (robot -> goal) path
-  void pathTracing(const grid_map::Index& start_index, const grid_map::Index& goal_index,
-                   std::vector<Eigen::Vector2d>& path);
+  // Backtracking of searched path: After (goal -> robot) wavefront expansion, load logged sequence of (robot -> goal)
+  void generatePath(const grid_map::Index& start_index, const grid_map::Index& goal_index,
+                    std::vector<grid_map::Position>& path);
 
-  OccupancyGridMap occupancymap_;
+  bool hasWaveExpansionCostAt(const grid_map::Index& index);
 
-  Costmap::Ptr costmapPtr_;  // used for search algorithm
-  bool search_unknown_area_{ false };
+  CostMap costmap_;
 };
 
 #endif  // WAVE_PROPAGATOR_H

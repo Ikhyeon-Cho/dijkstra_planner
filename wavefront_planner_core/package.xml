@@ -9,6 +9,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>grid_map_core</depend>
   <depend>occupancy_gridmap_core</depend>
+  <depend>costmap_core</depend>
 
   <export>
   </export>

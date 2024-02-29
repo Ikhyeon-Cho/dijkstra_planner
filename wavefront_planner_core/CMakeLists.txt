@@ -5,6 +5,7 @@ add_compile_options(-std=c++14)
 find_package(catkin REQUIRED COMPONENTS
   grid_map_core
   occupancy_gridmap_core
+  costmap_core
 )
 
 catkin_package(
@@ -15,6 +16,7 @@ catkin_package(
   CATKIN_DEPENDS 
     grid_map_core
     occupancy_gridmap_core
+    costmap_core
 )
 
 ###########
@@ -29,7 +31,6 @@ include_directories(
 
 add_library(${PROJECT_NAME}
   src/WavePropagator.cpp
-  src/Costmap.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

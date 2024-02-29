@@ -18,13 +18,12 @@ namespace ros_utils
 {
 namespace tf
 {
+
 /// @brief
-/// @tparam T Datatype
+/// @tparam T T Datatype
 /// @param in The data to be transformed
-/// @param target_frame Target frame to be transformed
-/// @param source_frame Current frame of the data
-/// @param out A reference to the transformed data
-/// @return True if succeed to get transformed data. False otherwise
+/// @param out Transformed data 
+/// @param transform geometry_msgs::TransformStamped 
 template <typename T>
 static void doTransform(const T& in, T& out, geometry_msgs::TransformStamped& transform)
 {

@@ -8,8 +8,12 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
+
   <depend>occupancy_gridmap_core</depend>
   <depend>occupancy_gridmap_msgs</depend>
+  
+  <depend>gridmap_server</depend>
+  
   <depend>wavefront_planner_core</depend>
   <depend>wavefront_planner_msgs</depend>
 

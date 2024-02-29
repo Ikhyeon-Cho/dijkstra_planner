@@ -1,5 +1,5 @@
 # Wavefront planner
-This repository provides the `wavefront_planner` ROS Node, which creates a planned path for a mobile robot on the basis of a grid map. The planner assumes a circular robot and operates on a costmap to find a minimum cost plan from a start point to an end point in a grid. 
+This repository provides the `wavefront_planner` ROS Node, which creates a planned path for a mobile robot on the basis of a grid map. The planner finds a minimum cost plan from a start position to an end position, which assumes a circular robot and operates on a gridded costmap. 
 
 ## Overview
 The wavefront expension algorithm is a specialized [potential field](https://en.wikipedia.org/wiki/Motion_planning#Artificial_potential_fields) path planner with breadth-first search ([BFS](https://en.wikipedia.org/wiki/Breadth-first_search)) to avoid local minima. It uses a growing circle around the robot. The nearest neighbors are analyzed first and then the radius of the circle is extended to distant regions.
