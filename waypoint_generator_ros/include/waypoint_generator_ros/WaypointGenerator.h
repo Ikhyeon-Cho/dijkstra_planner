@@ -26,18 +26,19 @@ private:
   ros::NodeHandle nh_{ "~" };
 
   // Topics
-  std::string path_topic_{ nh_.param<std::string>("pathTopic", "/wavefront_planner/path") };
+  std::string path_topic_{ nh_.param<std::string>("/wavefront_planner/pathTopic", "path") };
   std::string waypoint_topic_{ nh_.param<std::string>("waypointTopic", "waypoint_goal") };
 
   // Frame Ids
-  std::string map_frame_{ nh_.param<std::string>("mapFrame", "map") };
-  std::string baselink_frame_{ nh_.param<std::string>("baselinkFrame", "base_link") };
+  std::string map_frame_{ nh_.param<std::string>("/wavefront_planner/mapFrame", "map") };
+  std::string baselink_frame_{ nh_.param<std::string>("/wavefront_planner/baselinkFrame", "base_link") };
 
   // Parameters
   double distance_from_robot_{ nh_.param<double>("distanceFromRobot", 5.0) };
 
   // ROS
-  ros::Subscriber sub_path_{ nh_.subscribe(path_topic_, 1, &WaypointGenerator::findWaypoint, this) };
+  ros::Subscriber sub_path_{ nh_.subscribe("/wavefront_planner/" + path_topic_, 1, &WaypointGenerator::findWaypoint,
+                                           this) };
   ros::Publisher pub_waypoint_{ nh_.advertise<geometry_msgs::PoseStamped>(waypoint_topic_, 10) };
 
   // ROS Utils

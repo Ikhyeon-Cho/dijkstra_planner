@@ -52,15 +52,15 @@ bool WavePropagator::doWavePropagationAt(const grid_map::Position& goal_position
   // Check Validity of start and goal position: should not be in occupied cell (or also unknown cell)
   if (costmap_.isLethalAt(robot_index))
   {
-    std::cout << "\033[33m"
-              << "[ WARN] [ WavePropagator]: Invalid position. Robot is not in the FreeSpace" << std::endl;
+    std::cout << "\033[31m"
+              << "[ERROR] [ WavePropagator]: Invalid position. Robot is not in the FreeSpace" << std::endl;
     return false;
   }
 
   if (costmap_.isLethalAt(goal_index))
   {
-    std::cout << "\033[31m"
-              << "[ERROR] [ WavePropagator]: Invalid position. Goal is not in the FreeSpace" << std::endl;
+    std::cout << "\033[33m"
+              << "[ WARN] [ WavePropagator]: Invalid position. Goal is not in the FreeSpace" << std::endl;
     return false;
   }
 
