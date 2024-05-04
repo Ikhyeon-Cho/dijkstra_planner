@@ -5,7 +5,8 @@ add_compile_options(-std=c++17)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   tf2_ros
-  wavefront_planner_msgs
+  wavefront_core
+  wavefront_msgs
 )
 
 catkin_package(
@@ -16,7 +17,8 @@ catkin_package(
   CATKIN_DEPENDS 
     roscpp
     tf2_ros
-    wavefront_planner_msgs
+    wavefront_core
+    wavefront_msgs
 )
 
 ###########

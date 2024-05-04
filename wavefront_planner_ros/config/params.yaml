@@ -1,0 +1,14 @@
+path_planner:
+  # Topics
+  occupancyMapTopic: "/map"
+  goalTopic: "/move_base_simple/goal"
+
+  # Frame Ids
+  baselinkFrame: "base_link"
+  mapFrame: "map"
+
+  # WavePropagation
+  propagateUnknownCell: false
+  pathPublishRate: 20 # Hz
+  inflationRadius: 0.6
+  debugMode: true

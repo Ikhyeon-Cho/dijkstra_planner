@@ -8,7 +8,7 @@
  */
 
 #include <ros/ros.h>
-#include "wavefront_planner_ros/WavefrontPlanner.h"
+#include "wavefront_planner/WavefrontPlanner.h"
 
 int main(int argc, char** argv)
 {

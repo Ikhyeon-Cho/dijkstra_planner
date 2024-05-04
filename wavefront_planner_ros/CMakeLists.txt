@@ -4,10 +4,9 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  occupancy_gridmap_msgs
-  gridmap_server
-  wavefront_planner_core
-  wavefront_planner_msgs
+  tf2_ros
+  wavefront_core
+  wavefront_msgs
 )
 
 catkin_package(
@@ -17,10 +16,9 @@ catkin_package(
     # wavefront_planner
   CATKIN_DEPENDS 
     roscpp
-    occupancy_gridmap_msgs
-    gridmap_server
-    wavefront_planner_core
-    wavefront_planner_msgs
+    tf2_ros
+    wavefront_core
+    wavefront_msgs
 )
 
 ###########
@@ -33,18 +31,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(wavefront_planner_node src/wavefront_planner_node.cpp
+add_executable(wavefront_planner_node 
+  src/wavefront_planner_node.cpp
   src/WavefrontPlanner.cpp
 )
 
 target_link_libraries(wavefront_planner_node
   ${catkin_LIBRARIES}
 )
-
-# add_executable(localgoal_generator_node src/localgoal_generator_node.cpp
-#   src/local_goal_generator/LocalGoalGenerator.cpp
-#   src/wavefront_planner/WavefrontPlannerRosConverter.cpp
-# )
-# target_link_libraries(localgoal_generator_node
-#   ${catkin_LIBRARIES}
-# )

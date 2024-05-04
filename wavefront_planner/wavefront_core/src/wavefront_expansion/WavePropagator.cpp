@@ -7,7 +7,7 @@
  *       Email: tre0430@korea.ac.kr
  */
 
-#include "wavefront_planner_core/WavePropagator.h"
+#include "wavefront_core/WavePropagator.h"
 #include <iostream>
 // #include "execution_timer/ExecutionTimer.h"
 
@@ -23,13 +23,29 @@ void WavePropagator::initialize(const CostMap& costmap)
   costmap_.add("position_y_log");
 }
 
+void WavePropagator::initialize(const OccupancyMap& occupancy_map, bool propagate_unknown_cell)
+{
+  CostMap costmap;
+  if (safe_distance_ > 1e-3)
+  {
+    OccupancyMap inflated_map;
+    OccupancyMapHelper::getInflatedMap(occupancy_map, safe_distance_, inflated_map);  // Inflate the map (0.5m radius)
+    CostMapConverter::fromOccupancyMap(inflated_map, costmap, propagate_unknown_cell);
+  }
+  else
+  {
+    CostMapConverter::fromOccupancyMap(occupancy_map, costmap, propagate_unknown_cell);
+  }
+
+  initialize(costmap);
+}
+
 const CostMap& WavePropagator::getCostMap() const
 {
   return costmap_;
 }
 
-bool WavePropagator::doWavePropagationAt(const grid_map::Position& goal_position,
-                                         const grid_map::Position& robot_position)
+bool WavePropagator::search(const grid_map::Position& goal_position, const grid_map::Position& robot_position)
 {
   // Check Validity of start and goal position: should be inside the map
   if (!costmap_.isDefinedAt(goal_position))
@@ -144,8 +160,8 @@ bool WavePropagator::wavePropagation(const grid_map::Index& goal_index, const gr
   return false;
 }
 
-std::pair<bool, std::vector<grid_map::Position>>
-WavePropagator::doPathGeneration(const grid_map::Position& robot_position, const grid_map::Position& goal_position)
+std::pair<bool, std::vector<grid_map::Position>> WavePropagator::findPath(const grid_map::Position& robot_position,
+                                                                          const grid_map::Position& goal_position)
 {
   // Check Validity of robot and goal position: should be inside the map
   if (!costmap_.isDefinedAt(robot_position))

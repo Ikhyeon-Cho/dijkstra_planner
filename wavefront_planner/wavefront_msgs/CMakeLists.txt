@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(wavefront_planner_msgs)
+project(wavefront_msgs)
 add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -32,7 +32,7 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-  src/WavefrontPlannerMsgs.cpp
+  src/WavefrontMsgs.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

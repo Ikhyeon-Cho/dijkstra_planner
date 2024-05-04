@@ -1,4 +1,0 @@
-# ROS Package Dependencies
-- git:
-    local-name: gridmap_server
-    uri: https://github.com/Ikhyeon-Cho/gridmap_server.git

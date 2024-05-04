@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(wavefront_planner_core)
+project(wavefront_core)
 add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
   grid_map_core
-  occupancy_gridmap_core
-  costmap_core
+  grid_map_cv
+  grid_map_ros
 )
 
 catkin_package(
@@ -15,8 +15,8 @@ catkin_package(
     ${PROJECT_NAME}
   CATKIN_DEPENDS 
     grid_map_core
-    occupancy_gridmap_core
-    costmap_core
+    grid_map_cv
+    grid_map_ros
 )
 
 ###########
@@ -30,7 +30,12 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-  src/WavePropagator.cpp
+  src/costmap/CostMap.cpp
+  src/costmap/CostMapConverter.cpp
+  src/occupancy_grid/OccupancyMap.cpp
+  src/occupancy_grid/OccupancyMapHelper.cpp
+  src/occupancy_grid/OccupancyMapConverter.cpp
+  src/wavefront_expansion/WavePropagator.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

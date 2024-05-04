@@ -7,7 +7,7 @@
  *       Email: tre0430@korea.ac.kr
  */
 
-#include "wavefront_planner_msgs/WavefrontPlannerMsgs.h"
+#include "wavefront_msgs/WavefrontMsgs.h"
 
 void WavefrontPlannerMsgs::toPathMsg(const std::vector<Eigen::Vector2d>& path, nav_msgs::Path& msg)
 {

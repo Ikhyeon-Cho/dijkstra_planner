@@ -10,8 +10,10 @@
 #ifndef WAVE_PROPAGATOR_H
 #define WAVE_PROPAGATOR_H
 
-#include <occupancy_gridmap_core/OccupancyGridMap.h>
-#include <costmap_core/CostMap.h>
+#include "occupancy_grid/OccupancyMap.h"
+#include "occupancy_grid/OccupancyMapHelper.h"
+#include "costmap/CostMap.h"
+#include "costmap/CostMapConverter.h"
 
 class WavePropagator
 {
@@ -26,6 +28,13 @@ public:
   /// @param map
   void initialize(const CostMap& costmap);
 
+  void initialize(const OccupancyMap& occupancy_map, bool propagate_unknown = false);
+
+  void setSafeDistance(double safe_distance)
+  {
+    safe_distance_ = safe_distance;
+  }
+
   /// @brief
   /// @return
   const CostMap& getCostMap() const;
@@ -35,10 +44,10 @@ public:
   /// @param start_position The position of a robot in 2D
   /// @param goal_position The position of a goal in 2D
   /// @return True if the wave is reached to the start position, False otherwise
-  bool doWavePropagationAt(const grid_map::Position& goal_position, const grid_map::Position& robot_position);
+  bool search(const grid_map::Position& goal_position, const grid_map::Position& robot_position);
 
-  std::pair<bool, std::vector<grid_map::Position>> doPathGeneration(const grid_map::Position& robot_position,
-                                                                    const grid_map::Position& goal_position);
+  std::pair<bool, std::vector<grid_map::Position>> findPath(const grid_map::Position& robot_position,
+                                                            const grid_map::Position& goal_position);
 
 private:
   // BFS search: It is nothing but a priority queue based algorithm implementation
@@ -52,6 +61,7 @@ private:
   bool hasWaveExpansionCostAt(const grid_map::Index& index);
 
   CostMap costmap_;
+  double safe_distance_{ 0.0 };
 };
 
 #endif  // WAVE_PROPAGATOR_H

@@ -10,7 +10,8 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>tf2_ros</depend>
-  <depend>wavefront_planner_msgs</depend>
+  <depend>wavefront_core</depend>
+  <depend>wavefront_msgs</depend>
 
   <export>
   </export>

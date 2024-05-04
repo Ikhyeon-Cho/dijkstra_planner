@@ -1,0 +1,6 @@
+#include "WavePropagator.h"
+#include "occupancy_grid/OccupancyMap.h"
+#include "occupancy_grid/OccupancyMapHelper.h"
+#include "occupancy_grid/OccupancyMapConverter.h"
+#include "costmap/CostMap.h"
+#include "costmap/CostMapConverter.h"
