@@ -1,5 +1,5 @@
 # Wavefront planner
-This repository provides the `wavefront_planner` ROS package, which creates a planned path for a mobile robot on the basis of an occupancy grid map. The planner finds a minimum cost plan from a start position to an end position, which assumes a circular robot. 
+This repository provides the `wavefront_planner` ROS package, which creates a planned path for a mobile robot on the basis of an occupancy grid map. The planner finds a minimum cost plan from a start position to an end position. The package assumes a circular robot for applying the safe distance to the obstacles.g 
 
 ## Overview
 The wavefront expansion algorithm is a specialized [potential field](https://en.wikipedia.org/wiki/Motion_planning#Artificial_potential_fields) path planner with breadth-first search ([BFS](https://en.wikipedia.org/wiki/Breadth-first_search)) to avoid local minima. It uses a growing circle around the robot. The nearest neighbors are analyzed first and then the radius of the circle is extended to distant regions.
@@ -13,6 +13,7 @@ Wave Propagation | Cost Map | Navigation
 - Ubuntu (Tested on 20.04) 
 - ROS (Tested on [ROS Noetic](https://wiki.ros.org/noetic))
 - [grid_map](https://github.com/ANYbotics/grid_map) library
+
 For installation of **`grid_map`**, use the following commands:
 ```
 sudo apt install ros-noetic-grid-map
