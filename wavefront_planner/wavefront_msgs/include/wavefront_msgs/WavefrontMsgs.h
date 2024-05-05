@@ -14,6 +14,7 @@
 #include <Eigen/Dense>
 #include <nav_msgs/Path.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <grid_map_msgs/GridMap.h>
 
 class WavefrontPlannerMsgs
 {

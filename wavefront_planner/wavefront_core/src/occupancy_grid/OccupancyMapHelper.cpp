@@ -1,9 +1,13 @@
 #include "occupancy_grid/OccupancyMapHelper.h"
 
-bool OccupancyMapHelper::initializeFromImage(const cv::Mat& image, const double resolution,
-                                                 OccupancyMap& occupancy_map)
+bool OccupancyMapHelper::initializeFromImage(const cv::Mat& image, const double resolution, OccupancyMap& occupancy_map)
 {
-  grid_map::GridMapCvConverter::initializeFromImage(image, resolution, occupancy_map, grid_map::Position(0, 0));
+  // initializeFromImage only resets the geometry of the map
+  grid_map::GridMapCvConverter::initializeFromImage(image, resolution, occupancy_map, grid_map::Position::Zero());
+
+  // map server has offset to the map frame (left bottom corner of the map is the frame origin)
+  auto origin = grid_map::Position(occupancy_map.getLength().x() / 2.0, occupancy_map.getLength().y() / 2.0);
+  grid_map::GridMapCvConverter::initializeFromImage(image, resolution, occupancy_map, origin);
   if (!grid_map::GridMapCvConverter::addLayerFromImage<unsigned char, 1>(image, "image", occupancy_map, 0, 255))
     return false;
 
@@ -15,8 +19,7 @@ bool OccupancyMapHelper::initializeFromImage(const cv::Mat& image, const double 
   return true;
 }
 
-void OccupancyMapHelper::applyBinaryThreshold(double free_thres, double occupied_thres,
-                                                  OccupancyMap& occupancy_map)
+void OccupancyMapHelper::applyBinaryThreshold(double free_thres, double occupied_thres, OccupancyMap& occupancy_map)
 {
   auto& occupancy_layer = occupancy_map.getOccupancyLayer();
 
@@ -40,7 +43,7 @@ void OccupancyMapHelper::applyBinaryThreshold(double free_thres, double occupied
 }
 
 bool OccupancyMapHelper::getInflatedMap(const OccupancyMap& map, double inflation_radius,
-                                            OccupancyMap& map_with_inflation)
+                                        OccupancyMap& map_with_inflation)
 {
   // Check validity of inflaton radius
   if (std::abs(inflation_radius) < 1e-3)

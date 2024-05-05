@@ -26,21 +26,24 @@ void WavePropagator::initialize(const CostMap& costmap)
 void WavePropagator::initialize(const OccupancyMap& occupancy_map, bool propagate_unknown_cell)
 {
   CostMap costmap;
+  CostMapConverter::fromOccupancyMap(occupancy_map, costmap, propagate_unknown_cell);
+  
   if (safe_distance_ > 1e-3)
   {
     OccupancyMap inflated_map;
     OccupancyMapHelper::getInflatedMap(occupancy_map, safe_distance_, inflated_map);  // Inflate the map (0.5m radius)
-    CostMapConverter::fromOccupancyMap(inflated_map, costmap, propagate_unknown_cell);
-  }
-  else
-  {
-    CostMapConverter::fromOccupancyMap(occupancy_map, costmap, propagate_unknown_cell);
+    CostMapConverter::fromInflationMap(inflated_map, costmap, propagate_unknown_cell);
   }
 
   initialize(costmap);
 }
 
 const CostMap& WavePropagator::getCostMap() const
+{
+  return costmap_;
+}
+
+CostMap& WavePropagator::getCostMap()
 {
   return costmap_;
 }
@@ -101,11 +104,9 @@ bool WavePropagator::wavePropagation(const grid_map::Index& goal_index, const gr
   {
     // Termination condition of wavefromt propagation: If wave reached start cell, then quit search
     // add 2 grid margin condition to handle the robot's localization error
-    if (hasWaveExpansionCostAt(robot_index + grid_map::Index(0, 0)) &&
-        hasWaveExpansionCostAt(robot_index + grid_map::Index(2, 0)) &&
-        hasWaveExpansionCostAt(robot_index + grid_map::Index(0, 2)) &&
-        hasWaveExpansionCostAt(robot_index + grid_map::Index(-2, 0)) &&
-        hasWaveExpansionCostAt(robot_index + grid_map::Index(0, -2)))
+    if (hasReachedAt(robot_index + grid_map::Index(0, 0)) && hasReachedAt(robot_index + grid_map::Index(2, 0)) &&
+        hasReachedAt(robot_index + grid_map::Index(0, 2)) && hasReachedAt(robot_index + grid_map::Index(-2, 0)) &&
+        hasReachedAt(robot_index + grid_map::Index(0, -2)))
       return true;
 
     const auto searched_cell = searched_cell_list.top();
@@ -122,6 +123,9 @@ bool WavePropagator::wavePropagation(const grid_map::Index& goal_index, const gr
         continue;
 
       if (costmap_.isLethalAt(*wave_expansion_iterator))
+        continue;
+
+      if (safe_distance_ > 1e-3 && costmap_.isInscribedAt(*wave_expansion_iterator))
         continue;
 
       // Square iterator searches the already searched grid cell, but it is not needed to search again
@@ -196,7 +200,7 @@ std::pair<bool, std::vector<grid_map::Position>> WavePropagator::findPath(const 
   }
 
   // Check whether the robot is out of the searched area
-  if (!hasWaveExpansionCostAt(robot_index))
+  if (!hasReachedAt(robot_index))
   {
     std::cout << "\033[33m"
               << "[ WARN] [ WavePropagator]: Robot is now out of the Searched area" << std::endl;
@@ -215,8 +219,16 @@ void WavePropagator::generatePath(const grid_map::Index& robot_index, const grid
 
   while (!(cost_gradient_follower == goal_index).all())  // Find path to (robot -> goal)
   {
-    grid_map::Position next_position(costmap_["position_x_log"](cost_gradient_follower(0), cost_gradient_follower(1)),
-                                     costmap_["position_y_log"](cost_gradient_follower(0), cost_gradient_follower(1)));
+    const auto& next_position_x = costmap_["position_x_log"](cost_gradient_follower(0), cost_gradient_follower(1));
+    const auto& next_position_y = costmap_["position_y_log"](cost_gradient_follower(0), cost_gradient_follower(1));
+    if (!std::isfinite(next_position_x) || !std::isfinite(next_position_y))
+    {
+      std::cout << "\033[31m"
+                << "[ERROR] [ WavePropagator]: Path generation failed. No path available" << std::endl;
+      return;
+    }
+
+    grid_map::Position next_position(next_position_x, next_position_y);
 
     path.push_back(next_position);
 
@@ -225,7 +237,7 @@ void WavePropagator::generatePath(const grid_map::Index& robot_index, const grid
   path.push_back(costmap_.getPositionFrom(goal_index));
 }
 
-bool WavePropagator::hasWaveExpansionCostAt(const grid_map::Index& index)
+bool WavePropagator::hasReachedAt(const grid_map::Index& index)
 {
   return std::isfinite(costmap_.at("cost_wave_expansion", index));
 }

@@ -10,5 +10,5 @@ path_planner:
   # WavePropagation
   propagateUnknownCell: false
   pathPublishRate: 20 # Hz
-  inflationRadius: 0.6
+  inflationRadius: 2.0
   debugMode: true

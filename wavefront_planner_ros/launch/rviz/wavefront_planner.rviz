@@ -35,9 +35,9 @@ Visualization Manager:
     - Alpha: 1
       Class: rviz/Axes
       Enabled: true
-      Length: 1
+      Length: 2
       Name: Robot (Axes)
-      Radius: 0.10000000149011612
+      Radius: 0.5
       Reference Frame: base_link
       Show Trail: false
       Value: true
@@ -105,7 +105,7 @@ Visualization Manager:
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
       Line Style: Billboards
-      Line Width: 0.10000000149011612
+      Line Width: 0.20000000298023224
       Name: Path
       Offset:
         X: 0
@@ -126,11 +126,14 @@ Visualization Manager:
       Color: 200; 200; 200
       Color Layer: cost_wave_expansion
       Color Transformer: ""
+      ColorMap: default
       Enabled: false
+      Grid Cell Decimation: 1
+      Grid Line Thickness: 0.10000000149011612
       Height Layer: cost_lethal
       Height Transformer: GridMapLayer
       History Length: 1
-      Invert Rainbow: false
+      Invert ColorMap: false
       Max Color: 204; 0; 0
       Max Intensity: 10
       Min Color: 32; 74; 135
@@ -139,7 +142,7 @@ Visualization Manager:
       Show Grid Lines: true
       Topic: /path_planner/debug/costmap
       Unreliable: false
-      Use Rainbow: true
+      Use ColorMap: true
       Value: false
   Enabled: true
   Global Options:
@@ -168,7 +171,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: 0.004999992437660694
+      Angle: 1.5649986267089844
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -178,10 +181,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 13.08804988861084
+      Scale: 22.28504753112793
       Target Frame: <Fixed Frame>
-      X: 40.792213439941406
-      Y: 37.35008239746094
+      X: 14.675548553466797
+      Y: 21.105873107910156
     Saved: ~
 Window Geometry:
   Displays:

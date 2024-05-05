@@ -46,14 +46,14 @@ bool CostMap::isDefinedAt(const grid_map::Index& index)
   return getPosition(index, pos);
 }
 
-grid_map::Index CostMap::getGridIndexFrom(const grid_map::Position& position)
+grid_map::Index CostMap::getGridIndexFrom(const grid_map::Position& position) const
 {
   grid_map::Index index;
   getIndex(position, index);
   return index;
 }
 
-grid_map::Position CostMap::getPositionFrom(const grid_map::Index& index)
+grid_map::Position CostMap::getPositionFrom(const grid_map::Index& index) const
 {
   grid_map::Position position;
   getPosition(index, position);
@@ -92,4 +92,10 @@ bool CostMap::isFreeAt(const grid_map::Index& index)
 {
   const auto& cost_lethal = at("cost_lethal", index);
   return std::abs(cost_lethal - COST_FREESPACE) < 1e-6;
+}
+
+bool CostMap::isInscribedAt(const grid_map::Index& index)
+{
+  const auto& cost_obstacle = at("cost_inflation", index);
+  return std::abs(cost_obstacle - COST_LETHAL) < 1e-6;
 }

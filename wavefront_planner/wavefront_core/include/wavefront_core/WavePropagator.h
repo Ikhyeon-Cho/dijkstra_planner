@@ -38,6 +38,7 @@ public:
   /// @brief
   /// @return
   const CostMap& getCostMap() const;
+  CostMap& getCostMap();
 
   /// @brief The algorithm spreads a "wave" of values starting from the goal cell and expanding outwards, assigning each
   /// cell a value indicating its distance from the goal.
@@ -49,7 +50,7 @@ public:
   std::pair<bool, std::vector<grid_map::Position>> findPath(const grid_map::Position& robot_position,
                                                             const grid_map::Position& goal_position);
 
-private:
+protected:
   // BFS search: It is nothing but a priority queue based algorithm implementation
   // See https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
   bool wavePropagation(const grid_map::Index& robot_index, const grid_map::Index& goal_index);
@@ -58,7 +59,7 @@ private:
   void generatePath(const grid_map::Index& start_index, const grid_map::Index& goal_index,
                     std::vector<grid_map::Position>& path);
 
-  bool hasWaveExpansionCostAt(const grid_map::Index& index);
+  bool hasReachedAt(const grid_map::Index& index);
 
   CostMap costmap_;
   double safe_distance_{ 0.0 };

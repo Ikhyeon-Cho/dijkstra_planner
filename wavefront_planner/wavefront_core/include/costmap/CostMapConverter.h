@@ -15,8 +15,8 @@
 class CostMapConverter
 {
 public:
-  static void fromOccupancyMap(const OccupancyMap& occupancy_map, CostMap& cost_map,
-                                   bool unknown_is_lethal = true);
+  static void fromOccupancyMap(const OccupancyMap& occupancy_map, CostMap& cost_map, bool unknown_is_lethal = true);
+  static void fromInflationMap(const OccupancyMap& inflation_map, CostMap& cost_map, bool unknown_is_lethal = true);
 };
 
 #endif  // COSTMAP_HELPER_H

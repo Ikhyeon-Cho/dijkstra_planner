@@ -29,3 +29,22 @@ void CostMapConverter::fromOccupancyMap(const OccupancyMap& occupancy_map, CostM
     lethal_cost_layer = lethal_cost_layer.array().isNaN().select(CostMap::COST_LETHAL, lethal_cost_layer);
   }
 }
+
+void CostMapConverter::fromInflationMap(const OccupancyMap& inflation_map, CostMap& cost_map, bool unknown_is_free)
+{
+  const auto& occupancy_layer = inflation_map.getOccupancyLayer();
+  auto& inflation_cost_layer = cost_map.getInflationLayer();
+
+  inflation_cost_layer = occupancy_layer * CostMap::COST_LETHAL;
+
+  if (unknown_is_free)
+  {
+    // Nan to Free
+    inflation_cost_layer = inflation_cost_layer.array().isNaN().select(CostMap::COST_FREESPACE, inflation_cost_layer);
+  }
+  else
+  {
+    // Nan to Lethal
+    inflation_cost_layer = inflation_cost_layer.array().isNaN().select(CostMap::COST_LETHAL, inflation_cost_layer);
+  }
+}

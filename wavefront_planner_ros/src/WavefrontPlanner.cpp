@@ -16,6 +16,15 @@ WavefrontPlanner::WavefrontPlanner() : map_is_initialized_{ false }
   ROS_INFO("%-65s %s", ("Subscribing to the map topic: " + occupancy_map_topic_).c_str(), "[ WavefrontPlanner]");
   ROS_INFO("%-65s %s", ("Subscribing to the goal topic: " + goal_topic_).c_str(), "[ WavefrontPlanner]");
   std::cout << std::endl;
+
+  if (debug_mode_)
+  {
+    debug_timer_ = nh_priv_.createTimer(ros::Duration(1.0), &WavefrontPlanner::debug, this, false, false);
+    pub_costmap_ = nh_priv_.advertise<grid_map_msgs::GridMap>("debug/costmap", 1);
+    pub_occupancy_map_ = nh_priv_.advertise<nav_msgs::OccupancyGrid>("debug/occupancy_map", 1);
+
+    ROS_INFO("%-65s %s", "Debug Mode is activated. Publishing the costmap in 1 Hz...", "[ WavefrontPlanner]");
+  }
 }
 
 void WavefrontPlanner::initializeMap(const nav_msgs::OccupancyGridConstPtr& msg)
@@ -28,7 +37,7 @@ void WavefrontPlanner::initializeMap(const nav_msgs::OccupancyGridConstPtr& msg)
   // Set grid search space
   wave_propagator_.setSafeDistance(inflation_radius_);
   wave_propagator_.initialize(occupancy_map_, enable_search_unknown_);
-  
+
   map_is_initialized_ = true;
 
   if (debug_mode_)
@@ -85,13 +94,13 @@ void WavefrontPlanner::wavePropagation(const geometry_msgs::PoseStampedConstPtr&
   if (!wave_propagator_.search(goal_position, robot_position))
   {
     ROS_ERROR("%-65s %s\n", "No Feasible Path found.", "[ WavefrontPlanner]");
-    path_generation_timer_.stop();
+    path_finding_timer_.stop();
     return;
   }
 
   ROS_INFO("%-65s %s\n", ("Path found. Publishing the path in " + std::to_string(path_update_rate_) + " Hz...").c_str(),
            "[ WavefrontPlanner]");
-  path_generation_timer_.start();
+  path_finding_timer_.start();
 }
 
 void WavefrontPlanner::findPath(const ros::TimerEvent& event)
@@ -122,10 +131,10 @@ void WavefrontPlanner::findPath(const ros::TimerEvent& event)
   }
   else  // 2. If path generation currently fails, then re-activate wave propagation
   {
-    ROS_WARN("%-65s %s", "Failed to generate path from the costmap. Replanning...", "[ WavefrontPlanner]");
+    ROS_WARN_THROTTLE(1, "%-65s %s", "Failed to generate path from the costmap. Replanning...", "[ WavefrontPlanner]");
     if (!wave_propagator_.search(goal_position, robot_position))
     {
-      ROS_ERROR("%-65s %s\n", "Could not complete the wavefront search. No path available.", "[ WavefrontPlanner]");
+      ROS_ERROR_THROTTLE(1, "%-65s %s\n", "Could not complete the wavefront search. No path available.", "[ WavefrontPlanner]");
       return;
     }
 

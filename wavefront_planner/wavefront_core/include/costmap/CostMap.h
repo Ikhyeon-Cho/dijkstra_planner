@@ -34,10 +34,11 @@ public:
   bool isDefinedAt(const grid_map::Index& index);
 
   bool isLethalAt(const grid_map::Index& index);
+  bool isInscribedAt(const grid_map::Index& index);
   bool isFreeAt(const grid_map::Index& index);
 
-  grid_map::Index getGridIndexFrom(const grid_map::Position& position);
-  grid_map::Position getPositionFrom(const grid_map::Index& index);
+  grid_map::Index getGridIndexFrom(const grid_map::Position& position) const;
+  grid_map::Position getPositionFrom(const grid_map::Index& index) const;
   float getL2Dist(const grid_map::Index& from, const grid_map::Index& to);
 
   grid_map::CircleIterator getCircleIterator(const grid_map::Index& query_index, double radius) const;

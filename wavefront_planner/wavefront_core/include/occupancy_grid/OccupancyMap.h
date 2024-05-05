@@ -39,7 +39,6 @@ public:
   bool isOutOfBoundaryAt(const grid_map::Index& grid_index) const;
   bool isOutOfBoundaryAt(const grid_map::Position& position) const;
 
-
   grid_map::Position getPositionFrom(const grid_map::Index& grid_index) const;
   grid_map::Index getIndexFrom(const grid_map::Position& grid_position) const;
 

@@ -56,11 +56,11 @@ private:
   ros::Subscriber sub_goal_{ nh_priv_.subscribe(goal_topic_, 10, &WavefrontPlanner::wavePropagation, this) };
   ros::Publisher pub_path_{ nh_priv_.advertise<nav_msgs::Path>("path", 10) };
 
-  ros::Timer path_generation_timer_{ nh_priv_.createTimer(path_update_rate_, &WavefrontPlanner::findPath, this, false,
+  ros::Timer path_finding_timer_{ nh_priv_.createTimer(path_update_rate_, &WavefrontPlanner::findPath, this, false,
                                                           false) };
-  ros::Timer debug_timer_{ nh_priv_.createTimer(ros::Duration(1.0), &WavefrontPlanner::debug, this, false, false) };
-  ros::Publisher pub_costmap_{ nh_priv_.advertise<grid_map_msgs::GridMap>("debug/costmap", 1) };
-  ros::Publisher pub_occupancy_map_{ nh_priv_.advertise<nav_msgs::OccupancyGrid>("debug/occupancy_map", 1) };
+  ros::Timer debug_timer_;
+  ros::Publisher pub_costmap_;
+  ros::Publisher pub_occupancy_map_;
 
 private:
   WavePropagator wave_propagator_;
