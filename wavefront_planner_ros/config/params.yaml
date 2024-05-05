@@ -1,4 +1,4 @@
-path_planner:
+wavefront_planner:
   # Topics
   occupancyMapTopic: "/map"
   goalTopic: "/move_base_simple/goal"
