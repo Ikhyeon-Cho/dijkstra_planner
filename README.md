@@ -13,6 +13,7 @@ Wave Propagation | Cost Map | Navigation
 **Dependencies:** This software is built on the Robotic Operating System ([ROS](https://www.ros.org/)). We assume that the followings are installed.
 - Ubuntu (Tested on 20.04) 
 - ROS (Tested on [ROS Noetic](https://wiki.ros.org/noetic))
+- [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) (C++ template library for matrix operation)
 - [grid_map](https://github.com/ANYbotics/grid_map) library
 
 For installation of **`grid_map`**, use the following commands:
@@ -37,6 +38,8 @@ sudo apt install ros-noetic-grid-map
   ```
 
 <img src="wavefront_planner/docs/wavefront_planning.gif" width="500" />
+
+> **Note:** Thanks to the use of Eigen, the planner is sufficiently fast enough for practical usage. The figure above is just a vislualization of a search process. (Typically finds the path within microseconds in indoor environments, and few miliseconds in large-scale outdoor environments)
 
 ## Nodes
 ### wavefront_planner
