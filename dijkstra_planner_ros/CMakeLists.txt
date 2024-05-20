@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(waypoint_generator)
+project(dijkstra_planner)
 add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -31,10 +31,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(waypoint_generator_node src/waypoint_generator_node.cpp
-  src/WaypointGenerator.cpp
+add_executable(dijkstra_planner_node 
+  src/dijkstra_planner_node.cpp
+  src/DijkstraPlanner.cpp
 )
 
-target_link_libraries(waypoint_generator_node
+target_link_libraries(dijkstra_planner_node
   ${catkin_LIBRARIES}
 )

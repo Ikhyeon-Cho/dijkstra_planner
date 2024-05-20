@@ -1,0 +1,19 @@
+<launch>
+  <!-- Potential field demo -->
+  <param name="/dijkstra_planner_demos/costmap_demo" value="true" />
+  <node pkg="dijkstra_planner_demos" type="dijkstra_planner_demos" name="costmap_demo" output="screen">
+    <param name="mapImgDirectory" value="$(find dijkstra_planner_demos)/map/maze.png" />
+    <param name="gridResolution" value="0.1" />
+    <param name="safeDistance" value="0.0" />
+    <param name="robotX" value="4" />
+    <param name="robotY" value="30" />
+    <param name="goalX" value="4" />
+    <param name="goalY" value="21" />
+
+  </node>
+
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" name="rviz_costmap_demo"
+    args="-d $(find dijkstra_planner_demos)/launch/rviz/costmap.rviz" />
+
+</launch>

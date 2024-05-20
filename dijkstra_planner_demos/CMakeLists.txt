@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(waypoint_generator)
+project(dijkstra_planner_demos)
 add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -13,7 +13,7 @@ catkin_package(
   INCLUDE_DIRS 
     include
   LIBRARIES 
-    # dijkstra_planner
+    # dijkstra_planner_demos
   CATKIN_DEPENDS 
     roscpp
     tf2_ros
@@ -31,10 +31,13 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(waypoint_generator_node src/waypoint_generator_node.cpp
-  src/WaypointGenerator.cpp
+# Search Demo node
+add_executable(dijkstra_planner_demos 
+  src/dijkstra_planner_demos_node.cpp
+  src/DijkstraPlannerDemo.cpp # Wavefront search demo
+  src/CostmapDemo.cpp # Potential field demo
+  src/WavePropagatorDemo.cpp
 )
-
-target_link_libraries(waypoint_generator_node
+target_link_libraries(dijkstra_planner_demos
   ${catkin_LIBRARIES}
 )

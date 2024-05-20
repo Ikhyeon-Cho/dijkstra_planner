@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>waypoint_generator</name>
+  <name>dijkstra_planner_demos</name>
   <version>0.0.0</version>
-  <description>The waypoint_generator package. This package generators the waypoint from the
-    globally planned path</description>
+  <description>The dijkstra_planner ROS demo package</description>
   <maintainer email="tre0430@korea.ac.kr">Ikhyeon Cho</maintainer>
   <license>.</license>
 

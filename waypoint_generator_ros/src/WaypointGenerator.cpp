@@ -31,7 +31,7 @@ void WaypointGenerator::findWaypoint(const nav_msgs::PathConstPtr& msg)
     ros_utils::tf::doTransform(waypoint_map, waypoint_baselink, map_to_base);
 
     Eigen::Vector2d waypoint_position;
-    WavefrontPlannerMsgs::fromPoseMsg(waypoint_baselink.pose, waypoint_position);
+    Msgs::fromPoseMsg(waypoint_baselink.pose, waypoint_position);
 
     if (waypoint_position.norm() > distance_from_robot_)
       break;

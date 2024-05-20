@@ -1,0 +1,10 @@
+<launch>
+
+  <!-- Dijkstra planner -->
+  <include file="$(find dijkstra_planner)/launch/dijkstra_planner.launch" />
+
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" name="rviz_dijkstra_planner"
+    args="-d $(find dijkstra_planner)/launch/rviz/dijkstra_planner.rviz" />
+
+</launch>
